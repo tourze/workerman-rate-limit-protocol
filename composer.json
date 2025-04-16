@@ -8,7 +8,11 @@
     "workerman/workerman": "^5.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "^10.0"
+    "phpunit/phpunit": "^10.0",
+    "phpstan/phpstan": "^2.1"
+  },
+  "scripts": {
+    "phpstan": "phpstan analyse src -l 1"
   },
   "autoload": {
     "psr-4": {
@@ -19,8 +23,5 @@
     "psr-4": {
       "Tourze\\Workerman\\RateLimitProtocol\\Tests\\": "tests"
     }
-  },
-  "scripts": {
-    "test": "phpunit"
   }
 }

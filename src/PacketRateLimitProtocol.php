@@ -2,7 +2,6 @@
 
 namespace Tourze\Workerman\RateLimitProtocol;
 
-use Tourze\Workerman\RateLimitProtocol\Tests\MockTcpConnection;
 use Workerman\Connection\ConnectionInterface;
 use Workerman\Connection\TcpConnection;
 use Workerman\Connection\UdpConnection;
@@ -75,7 +74,7 @@ class PacketRateLimitProtocol extends AbstractRateLimitProtocol
         // 检查是否会超出限流阈值
         if ($stats->isPacketLimitExceeded()) {
             // 根据连接类型采取不同的限流措施
-            if ($connection instanceof TcpConnection || $connection instanceof MockTcpConnection) {
+            if ($connection instanceof TcpConnection) {
                 // TCP连接，暂停接收但仍发送数据
                 static::pauseConnection($connection);
                 static::updateStats($connection, $stats);

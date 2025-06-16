@@ -2,13 +2,13 @@
 
 namespace Tourze\Workerman\RateLimitProtocol\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Tourze\Workerman\RateLimitProtocol\TrafficRateLimitProtocol;
+use Tourze\WorkermanPHPUnit\Core\AsyncTestCase;
 
 /**
  * 流量限制协议测试类
  */
-class TrafficRateLimitProtocolTest extends TestCase
+class TrafficRateLimitProtocolTest extends AsyncTestCase
 {
     /**
      * 测试 decode 方法（直接返回原始数据）
@@ -52,6 +52,10 @@ class TrafficRateLimitProtocolTest extends TestCase
 
         TrafficRateLimitProtocol::input($data, $connection);
         $this->assertTrue($connection->paused, 'TCP 连接应被暂停');
+        
+        // 验证 1 秒后连接恢复
+        $this->advanceTime(1.0);
+        $this->assertFalse($connection->paused, '1秒后连接应恢复');
     }
 
     /**
@@ -101,6 +105,10 @@ class TrafficRateLimitProtocolTest extends TestCase
         $data3 = str_repeat('c', 1000); // 再增加1KB，累计超过2KB限制
         TrafficRateLimitProtocol::input($data3, $connection1);
         $this->assertTrue($connection1->paused);
+        
+        // 验证 1 秒后连接恢复
+        $this->advanceTime(1.0);
+        $this->assertFalse($connection1->paused, '1秒后连接1应恢复');
     }
 
     /**
@@ -124,6 +132,10 @@ class TrafficRateLimitProtocolTest extends TestCase
         $result2 = TrafficRateLimitProtocol::encode($bigData, $connection);
         $this->assertEquals($bigData, $result2, 'TCP 连接即使超出流量限制也应发送数据');
         $this->assertTrue($connection->paused, 'TCP 连接应被暂停');
+        
+        // 验证 1 秒后连接恢复
+        $this->advanceTime(1.0);
+        $this->assertFalse($connection->paused, '1秒后连接应恢复');
 
         // 测试非 TCP 连接超过限制
         $connection2 = new MockUdpConnection();
@@ -137,7 +149,7 @@ class TrafficRateLimitProtocolTest extends TestCase
      */
     public function testEncodeNonStringData(): void
     {
-        $connection = MockConnection::getTcpConnection();
+        $connection = new MockTcpConnection();
         $limit = 1024;
         $data = 123456; // 整数数据
 

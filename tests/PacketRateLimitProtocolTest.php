@@ -2,13 +2,13 @@
 
 namespace Tourze\Workerman\RateLimitProtocol\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Tourze\Workerman\RateLimitProtocol\PacketRateLimitProtocol;
+use Tourze\WorkermanPHPUnit\Core\AsyncTestCase;
 
 /**
  * 包数量限制协议测试类
  */
-class PacketRateLimitProtocolTest extends TestCase
+class PacketRateLimitProtocolTest extends AsyncTestCase
 {
     /**
      * 测试 decode 方法（直接返回原始数据）
@@ -56,6 +56,10 @@ class PacketRateLimitProtocolTest extends TestCase
         // 第二个包应被限流
         PacketRateLimitProtocol::input('packet2', $connection);
         $this->assertTrue($connection->paused, 'TCP 连接应被暂停');
+        
+        // 验证 1 秒后连接恢复
+        $this->advanceTime(1.0);
+        $this->assertFalse($connection->paused, '1秒后连接应恢复');
     }
 
     /**
@@ -104,6 +108,10 @@ class PacketRateLimitProtocolTest extends TestCase
         // 连接1的第三个包应该被限流
         PacketRateLimitProtocol::input('packet3', $connection1);
         $this->assertTrue($connection1->paused);
+        
+        // 验证 1 秒后连接恢复
+        $this->advanceTime(1.0);
+        $this->assertFalse($connection1->paused, '1秒后连接1应恢复');
 
         // 连接2的第一个包应该正常（使用全局限制）
         $result4 = PacketRateLimitProtocol::input('packet1', $connection2);
@@ -130,6 +138,10 @@ class PacketRateLimitProtocolTest extends TestCase
         $result2 = PacketRateLimitProtocol::encode('packet2', $connection);
         $this->assertEquals('packet2', $result2, 'TCP 连接即使超出包数限制也应发送数据');
         $this->assertTrue($connection->paused, 'TCP 连接应被暂停');
+        
+        // 验证 1 秒后连接恢复
+        $this->advanceTime(1.0);
+        $this->assertFalse($connection->paused, '1秒后连接应恢复');
 
         // 测试非 TCP 连接超过限制
         $connection2 = new MockUdpConnection();
@@ -149,7 +161,7 @@ class PacketRateLimitProtocolTest extends TestCase
      */
     public function testEncodeNonStringData(): void
     {
-        $connection = MockConnection::getTcpConnection();
+        $connection = new MockTcpConnection();
 
         // 设置限流阈值为 10 包/秒
         PacketRateLimitProtocol::setDefaultLimit(10);

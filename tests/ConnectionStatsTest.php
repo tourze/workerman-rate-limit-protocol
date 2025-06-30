@@ -38,7 +38,7 @@ class ConnectionStatsTest extends TestCase
 
         $this->assertEquals(0, $stats->trafficBytes, '新创建的实例流量字节数应为 0');
         $this->assertEquals(0, $stats->packets, '新创建的实例数据包数量应为 0');
-        $this->assertIsInt($stats->lastResetTime, '上次重置时间应为整数');
+        $this->assertGreaterThan(0, $stats->lastResetTime, '上次重置时间应为正数');
         $this->assertEquals($limit, $stats->limit, '限流阈值应为指定值');
     }
 
@@ -52,7 +52,7 @@ class ConnectionStatsTest extends TestCase
 
         $this->assertEquals(0, $stats->trafficBytes, '新创建的实例流量字节数应为 0');
         $this->assertEquals(0, $stats->packets, '新创建的实例数据包数量应为 0');
-        $this->assertIsInt($stats->lastResetTime, '上次重置时间应为整数');
+        $this->assertGreaterThan(0, $stats->lastResetTime, '上次重置时间应为正数');
         $this->assertEquals($limit, $stats->limit, '限流阈值应为指定值');
     }
 

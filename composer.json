@@ -9,7 +9,7 @@
   "require-dev": {
     "phpstan/phpstan": "^2.1",
     "phpunit/phpunit": "^11.5",
-    "tourze/phpunit-workerman": "self.version"
+    "tourze/phpunit-workerman": "1.*"
   },
   "autoload": {
     "psr-4": {

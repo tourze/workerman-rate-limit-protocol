@@ -4,6 +4,8 @@
 
 [![Latest Version](https://img.shields.io/packagist/v/tourze/workerman-rate-limit-protocol.svg?style=flat-square)](https://packagist.org/packages/tourze/workerman-rate-limit-protocol)
 [![Total Downloads](https://img.shields.io/packagist/dt/tourze/workerman-rate-limit-protocol.svg?style=flat-square)](https://packagist.org/packages/tourze/workerman-rate-limit-protocol)
+[![PHP Version](https://img.shields.io/packagist/php-v/tourze/workerman-rate-limit-protocol.svg?style=flat-square)](https://packagist.org/packages/tourze/workerman-rate-limit-protocol)
+[![License](https://img.shields.io/packagist/l/tourze/workerman-rate-limit-protocol.svg?style=flat-square)](https://github.com/tourze/workerman-rate-limit-protocol/blob/master/LICENSE)
 <!-- 其他相关徽章，例如构建状态、质量得分等 (如果适用) -->
 <!-- [![Build Status](https://img.shields.io/travis/tourze/workerman-rate-limit-protocol/master.svg?style=flat-square)](https://travis-ci.org/tourze/workerman-rate-limit-protocol) -->
 <!-- [![Quality Score](https://img.shields.io/scrutinizer/g/tourze/workerman-rate-limit-protocol.svg?style=flat-square)](https://scrutinizer-ci.com/g/tourze/workerman-rate-limit-protocol) -->
@@ -116,6 +118,6 @@ Worker::runAll();
 
 如果主项目有贡献指南，请参考。欢迎提交 Issue 和 Pull Request。
 
-## 协议
+## License
 
 MIT 许可证 (MIT)。详情请参阅 [LICENSE](LICENSE) 文件。

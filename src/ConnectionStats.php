@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\Workerman\RateLimitProtocol;
 
 /**
@@ -8,18 +10,17 @@ namespace Tourze\Workerman\RateLimitProtocol;
 class ConnectionStats
 {
     /**
-     * @param int $trafficBytes 流量字节数
-     * @param int $packets 数据包数量
+     * @param int $trafficBytes  流量字节数
+     * @param int $packets       数据包数量
      * @param int $lastResetTime 上次重置时间
-     * @param int $limit 限流阈值
+     * @param int $limit         限流阈值
      */
     public function __construct(
         public int $trafficBytes = 0,
         public int $packets = 0,
         public int $lastResetTime = 0,
-        public int $limit = 0
-    )
-    {
+        public int $limit = 0,
+    ) {
     }
 
     /**

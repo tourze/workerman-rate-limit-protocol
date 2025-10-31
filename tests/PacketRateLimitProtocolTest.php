@@ -1,14 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\Workerman\RateLimitProtocol\Tests;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Tourze\PHPUnitWorkerman\Core\AsyncTestCase;
 use Tourze\Workerman\RateLimitProtocol\PacketRateLimitProtocol;
-use Tourze\WorkermanPHPUnit\Core\AsyncTestCase;
 
 /**
  * 包数量限制协议测试类
+ *
+ * @internal
  */
-class PacketRateLimitProtocolTest extends AsyncTestCase
+#[CoversClass(PacketRateLimitProtocol::class)]
+#[RunTestsInSeparateProcesses]
+final class PacketRateLimitProtocolTest extends AsyncTestCase
 {
     /**
      * 测试 decode 方法（直接返回原始数据）
@@ -56,7 +64,7 @@ class PacketRateLimitProtocolTest extends AsyncTestCase
         // 第二个包应被限流
         PacketRateLimitProtocol::input('packet2', $connection);
         $this->assertTrue($connection->paused, 'TCP 连接应被暂停');
-        
+
         // 验证 1 秒后连接恢复
         $this->advanceTime(1.0);
         $this->assertFalse($connection->paused, '1秒后连接应恢复');
@@ -108,7 +116,7 @@ class PacketRateLimitProtocolTest extends AsyncTestCase
         // 连接1的第三个包应该被限流
         PacketRateLimitProtocol::input('packet3', $connection1);
         $this->assertTrue($connection1->paused);
-        
+
         // 验证 1 秒后连接恢复
         $this->advanceTime(1.0);
         $this->assertFalse($connection1->paused, '1秒后连接1应恢复');
@@ -138,7 +146,7 @@ class PacketRateLimitProtocolTest extends AsyncTestCase
         $result2 = PacketRateLimitProtocol::encode('packet2', $connection);
         $this->assertEquals('packet2', $result2, 'TCP 连接即使超出包数限制也应发送数据');
         $this->assertTrue($connection->paused, 'TCP 连接应被暂停');
-        
+
         // 验证 1 秒后连接恢复
         $this->advanceTime(1.0);
         $this->assertFalse($connection->paused, '1秒后连接应恢复');
@@ -168,6 +176,6 @@ class PacketRateLimitProtocolTest extends AsyncTestCase
 
         $data = 123456; // 整数数据
         $result = PacketRateLimitProtocol::encode($data, $connection);
-        $this->assertEquals((string)$data, $result, '非字符串数据应转换为字符串');
+        $this->assertEquals((string) $data, $result, '非字符串数据应转换为字符串');
     }
 }

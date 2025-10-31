@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Tourze\Workerman\RateLimitProtocol\Tests;
 
-use Workerman\Connection\TcpConnection;
-use Workerman\Events\Select;
+use Workerman\Connection\UdpConnection;
 
 /**
- * TCP 模拟连接类用于测试
+ * UDP 模拟连接类用于测试
  *
  * @internal
  */
-class MockTcpConnection extends TcpConnection
+class MockUdpConnection extends UdpConnection
 {
     /**
-     * 连接是否处于暂停状态
+     * 连接是否处于暂停状态 (UDP 不会暂停，但为测试保留该属性)
      */
     public bool $paused = false;
 
@@ -32,29 +31,12 @@ class MockTcpConnection extends TcpConnection
     public function __construct()
     {
         // 使用stream资源满足Workerman的要求
-        $eventLoop = new Select();
-        $socket = stream_socket_server('tcp://127.0.0.1:0', $errno, $errstr, STREAM_SERVER_BIND);
+        $socket = stream_socket_server('udp://127.0.0.1:0', $errno, $errstr, STREAM_SERVER_BIND);
         if (false === $socket) {
             $errorMessage = \is_string($errstr) ? $errstr : 'Unknown error';
             throw new \RuntimeException('Cannot create socket for testing: ' . $errorMessage);
         }
-        parent::__construct($eventLoop, $socket, '127.0.0.1:8080');
-    }
-
-    /**
-     * 暂停接收数据
-     */
-    public function pauseRecv(): void
-    {
-        $this->paused = true;
-    }
-
-    /**
-     * 恢复接收数据
-     */
-    public function resumeRecv(): void
-    {
-        $this->paused = false;
+        parent::__construct($socket, '127.0.0.1:8080');
     }
 
     /**

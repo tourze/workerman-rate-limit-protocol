@@ -4,6 +4,8 @@
 
 [![Latest Version](https://img.shields.io/packagist/v/tourze/workerman-rate-limit-protocol.svg?style=flat-square)](https://packagist.org/packages/tourze/workerman-rate-limit-protocol)
 [![Total Downloads](https://img.shields.io/packagist/dt/tourze/workerman-rate-limit-protocol.svg?style=flat-square)](https://packagist.org/packages/tourze/workerman-rate-limit-protocol)
+[![PHP Version](https://img.shields.io/packagist/php-v/tourze/workerman-rate-limit-protocol.svg?style=flat-square)](https://packagist.org/packages/tourze/workerman-rate-limit-protocol)
+[![License](https://img.shields.io/packagist/l/tourze/workerman-rate-limit-protocol.svg?style=flat-square)](https://github.com/tourze/workerman-rate-limit-protocol/blob/master/LICENSE)
 <!-- Add other relevant badges like build status, quality score if applicable -->
 <!-- [![Build Status](https://img.shields.io/travis/tourze/workerman-rate-limit-protocol/master.svg?style=flat-square)](https://travis-ci.org/tourze/workerman-rate-limit-protocol) -->
 <!-- [![Quality Score](https://img.shields.io/scrutinizer/g/tourze/workerman-rate-limit-protocol.svg?style=flat-square)](https://scrutinizer-ci.com/g/tourze/workerman-rate-limit-protocol) -->

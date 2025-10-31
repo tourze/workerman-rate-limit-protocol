@@ -3,14 +3,13 @@
   "description": "Workerman Rate Limit Protocol",
   "license": "MIT",
   "require": {
-    "php": "^8.1",
-    "symfony/rate-limiter": "^6.4",
+    "symfony/rate-limiter": "^7.3",
     "workerman/workerman": "^5.1"
   },
   "require-dev": {
     "phpstan/phpstan": "^2.1",
-    "phpunit/phpunit": "^10.0",
-    "tourze/workerman-phpunit": "self.version"
+    "phpunit/phpunit": "^11.5",
+    "tourze/phpunit-workerman": "self.version"
   },
   "autoload": {
     "psr-4": {

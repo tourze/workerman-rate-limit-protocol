@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\Workerman\RateLimitProtocol;
 
 use WeakMap;
@@ -21,9 +23,9 @@ abstract class AbstractRateLimitProtocol implements ProtocolInterface
     /**
      * 统计数据 - 使用 WeakMap 自动管理内存
      *
-     * @var WeakMap<ConnectionInterface, ConnectionStats>
+     * @var \WeakMap<ConnectionInterface, ConnectionStats>
      */
-    protected static ?WeakMap $statsMap = null;
+    protected static \WeakMap $statsMap;
 
     /**
      * 统计类型（'traffic' 或 'packets'）
@@ -33,21 +35,21 @@ abstract class AbstractRateLimitProtocol implements ProtocolInterface
     /**
      * 暂停接收的连接列表
      *
-     * @var WeakMap<ConnectionInterface, bool>
+     * @var \WeakMap<ConnectionInterface, bool>
      */
-    protected static ?WeakMap $pausedConnections = null;
+    protected static \WeakMap $pausedConnections;
 
     /**
      * 初始化 WeakMap
      */
     protected static function initMaps(): void
     {
-        if (static::$statsMap === null) {
-            static::$statsMap = new WeakMap();
+        if (!isset(static::$statsMap)) {
+            static::$statsMap = new \WeakMap();
         }
 
-        if (static::$pausedConnections === null) {
-            static::$pausedConnections = new WeakMap();
+        if (!isset(static::$pausedConnections)) {
+            static::$pausedConnections = new \WeakMap();
         }
     }
 
@@ -85,8 +87,9 @@ abstract class AbstractRateLimitProtocol implements ProtocolInterface
     protected static function isConnectionPaused(ConnectionInterface $connection): bool
     {
         static::initMaps();
-        return static::$pausedConnections->offsetExists($connection) &&
-            static::$pausedConnections[$connection] === true;
+
+        return static::$pausedConnections->offsetExists($connection)
+            && true === static::$pausedConnections[$connection];
     }
 
     /**
@@ -102,7 +105,7 @@ abstract class AbstractRateLimitProtocol implements ProtocolInterface
             static::$pausedConnections[$connection] = true;
 
             // 设置定时器，1秒后恢复接收
-            Timer::add(1, function () use ($connection) {
+            Timer::add(1, function () use ($connection): void {
                 static::resumeConnection($connection);
             }, null, false);
         }

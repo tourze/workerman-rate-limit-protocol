@@ -1,14 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\Workerman\RateLimitProtocol\Tests;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Tourze\Workerman\RateLimitProtocol\ConnectionStats;
 
 /**
  * 连接统计信息类测试
+ *
+ * @internal
  */
-class ConnectionStatsTest extends TestCase
+#[CoversClass(ConnectionStats::class)]
+final class ConnectionStatsTest extends TestCase
 {
     /**
      * 测试构造函数和属性
@@ -198,4 +204,4 @@ class ConnectionStatsTest extends TestCase
         $this->assertEquals(5, $newStats->packets, '新实例数据包数量应保持不变');
         $this->assertEquals($stats->lastResetTime, $newStats->lastResetTime, '新实例重置时间应保持不变');
     }
-} 
+}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\Workerman\RateLimitProtocol;
 
 use Workerman\Connection\ConnectionInterface;
@@ -26,7 +28,7 @@ class TrafficRateLimitProtocol extends AbstractRateLimitProtocol
     /**
      * 更新统计信息
      */
-    protected static function updateStats(ConnectionInterface $connection, ConnectionStats $stats, $value): void
+    protected static function updateStats(ConnectionInterface $connection, ConnectionStats $stats, int $value): void
     {
         static::$statsMap[$connection] = $stats->addTraffic($value);
     }
@@ -47,11 +49,12 @@ class TrafficRateLimitProtocol extends AbstractRateLimitProtocol
             if ($connection instanceof TcpConnection) {
                 // TCP连接，暂停接收
                 static::pauseConnection($connection);
+
                 return 0; // 等待更多数据，不处理当前数据
-            } else {
-                // 其他类型连接（包括UDP），直接丢弃数据包
-                return 0;
             }
+
+            // 其他类型连接（包括UDP），直接丢弃数据包
+            return 0;
         }
 
         // 更新统计信息
@@ -67,7 +70,12 @@ class TrafficRateLimitProtocol extends AbstractRateLimitProtocol
     public static function encode(mixed $data, ConnectionInterface $connection): string
     {
         $stats = static::getConnectionStats($connection);
-        $stringData = is_string($data) ? $data : (string)$data;
+        $stringData = match (true) {
+            is_string($data) => $data,
+            is_scalar($data) => (string) $data,
+            is_null($data) => '',
+            default => throw new \InvalidArgumentException('Data must be string, scalar, or null, got: ' . get_debug_type($data)),
+        };
         $dataLength = strlen($stringData);
 
         // 检查是否会超出限流阈值
@@ -77,11 +85,12 @@ class TrafficRateLimitProtocol extends AbstractRateLimitProtocol
                 // TCP连接，暂停接收但仍发送数据
                 static::pauseConnection($connection);
                 static::updateStats($connection, $stats, $dataLength);
+
                 return $stringData;
-            } else {
-                // 其他类型连接，直接丢弃数据
-                return '';
             }
+
+            // 其他类型连接，直接丢弃数据
+            return '';
         }
 
         // 更新统计信息
